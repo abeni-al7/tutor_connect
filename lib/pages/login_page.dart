@@ -1,195 +1,127 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tutor_connect/components/my_button.dart';
-import 'package:tutor_connect/components/my_text_field.dart';
-import 'package:tutor_connect/components/square_title.dart';
-import 'package:tutor_connect/services/auth_service.dart';
+import 'package:tutor_connect/components/my_textfield.dart';
+import 'package:tutor_connect/helper/helper_functions.dart';
 
 class LoginPage extends StatefulWidget {
-  final Function()? onTap;
+  final void Function()? studentRegister;
+  final void Function()? tutorRegister;
 
-  const LoginPage({super.key, required this.onTap});
+  const LoginPage(
+      {super.key, required this.studentRegister, required this.tutorRegister});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
-  // text editing controllers
-  final emailController = TextEditingController();
+  // text Controllers
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
-  final passwordController = TextEditingController();
-
-  // Wrong credential message popup
-  void wrongCredentialMessage() {
+  // Login method
+  void login() async {
+    // show loading circle
     showDialog(
-        context: context,
-        builder: (context) {
-          return const AlertDialog(
-            title: Text("Incorrect Email or Password"),
-          );
-        });
-  }
+      context: context,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
 
-  // sign user in method
-  Future<User?> signUserIn() async {
-    // Loading
-    showDialog(
-        context: context,
-        builder: (context) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        });
-
+    // try sign in
     try {
-      UserCredential credential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(
-              email: emailController.text, password: passwordController.text);
-      // Done loading
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: emailController.text, password: passwordController.text);
+
+      // pop loading circle
+      if (context.mounted) Navigator.pop(context);
+    }
+
+    // display any errors
+    on FirebaseAuthException catch (e) {
+      // pop loading circle
       Navigator.pop(context);
-      return credential.user;
-    } on FirebaseAuthException catch (e) {
-      // Done loading
-      Navigator.pop(context);
-      // Wrong credential
-      if (e.code == 'invalid-credential') {
-        wrongCredentialMessage();
-      }
-      return null;
+      displayMessageToUser(e.code, context);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.grey[300],
-        body: SafeArea(
-            child: Center(
+        backgroundColor: Theme.of(context).colorScheme.background,
+        body: Center(
+            child: Padding(
+          padding: const EdgeInsets.all(25.0),
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(height: 50),
                 // logo
-                Icon(
-                  Icons.lock,
-                  size: 100,
+                Icon(Icons.group,
+                    size: 80,
+                    color: Theme.of(context).colorScheme.inversePrimary),
+                const SizedBox(
+                  height: 25,
                 ),
-                const SizedBox(height: 50),
 
-                // text
-                Text(
-                  "Welcome to TutorConnect",
-                  style: TextStyle(
-                    color: Colors.grey[700],
-                    fontSize: 16,
-                  ),
+                // app name
+                const Text(
+                  'T U T O R C O N N E C T',
+                  style: TextStyle(fontSize: 20),
                 ),
+                const SizedBox(
+                  height: 50,
+                ),
+
+                // email textfield
+                MyTextField(
+                    hintText: "Email",
+                    obscureText: false,
+                    controller: emailController),
+                const SizedBox(height: 10),
+
+                // password textfield
+                MyTextField(
+                    hintText: "Password",
+                    obscureText: true,
+                    controller: passwordController),
                 const SizedBox(height: 25),
 
-                // email
-                MyTextField(
-                  controller: emailController,
-                  hintText: 'Email',
-                  obscureText: false,
-                ),
-                const SizedBox(height: 10),
-
-                // password
-                MyTextField(
-                  controller: passwordController,
-                  hintText: 'Password',
-                  obscureText: true,
-                ),
-
-                const SizedBox(height: 10),
-
-                // forgot password
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        "Forgot Password?",
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 20),
-
                 // sign in button
-                MyButton(
-                  text: "Sign In",
-                  onTap: signUserIn,
+                MyButton(text: "Login", onTap: login),
+                const SizedBox(
+                  height: 25,
                 ),
 
-                const SizedBox(height: 15),
-
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Divider(
-                          thickness: 0.5,
-                          color: Colors.grey[400],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: Text(
-                          'Or continue with',
-                          style: TextStyle(
-                            color: Colors.grey[700],
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Divider(
-                          thickness: 0.5,
-                          color: Colors.grey[400],
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 15),
-
+                // Register as a tutor
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // google
-                    SquareTitle(
-                        onTap: () => AuthService().signInWithGoogle(),
-                        imagePath: 'lib/images/google_logo.png'),
-                  ],
-                ),
-
-                const SizedBox(height: 13),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('Not a member?',
-                        style: TextStyle(color: Colors.grey[700])),
-                    const SizedBox(width: 4),
+                    const Text("Don't have an account? "),
                     GestureDetector(
-                      onTap: widget.onTap,
-                      child: Text('Register Now',
-                          style: TextStyle(
-                              color: Colors.blue[700],
-                              fontWeight: FontWeight.bold)),
-                    ),
+                        onTap: widget.tutorRegister,
+                        child: const Text(
+                          "Register as a tutor",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        )),
                   ],
-                )
+                ),
+
+                // Register as a student
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text("Or "),
+                    GestureDetector(
+                        onTap: widget.studentRegister,
+                        child: const Text(
+                          "Register a student",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        )),
+                  ],
+                ),
               ],
             ),
           ),
