@@ -21,8 +21,9 @@ class MyDrawer extends StatelessWidget {
               // drawer header
               DrawerHeader(
                 child: Icon(
-                  Icons.favorite,
+                  Icons.group,
                   color: Theme.of(context).colorScheme.inversePrimary,
+                  size: 75,
                 ),
               ),
               const SizedBox(
