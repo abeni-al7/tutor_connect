@@ -82,9 +82,10 @@ class TutorsPage extends StatelessWidget {
                                 Row(
                                   children: [
                                     const Text("Experience: "),
-                                    Text(tutor?['strengths']),
+                                    Text(tutor?['experience']),
                                   ],
                                 ),
+                                const SizedBox(height: 10),
                               ],
                             ),
                           ),
