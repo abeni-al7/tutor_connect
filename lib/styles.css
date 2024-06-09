@@ -1,0 +1,139 @@
+/* Reset CSS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+}
+
+header {
+    background: #333;
+    color: #fff;
+    padding: 10px 0;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+}
+
+nav ul li {
+    margin: 0 20px;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.2em;
+}
+
+.intro-section {
+    background: url('cover-image.jpg') no-repeat center center/cover;
+    position: relative;
+    color: #fff;
+    text-align: center;
+    padding: 100px 20px;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.overlay {
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Adjust opacity as needed */
+    padding: 50px;
+    border-radius: 10px;
+}
+
+.intro-section h1 {
+    font-size: 3em;
+    margin-bottom: 10px;
+}
+
+.intro-section p {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+}
+
+.cta-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #ff6347;
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.2em;
+    border-radius: 5px;
+}
+
+.features-section {
+    padding: 50px 20px;
+    text-align: center;
+}
+
+.features-section h2 {
+    font-size: 2.5em;
+    margin-bottom: 40px;
+}
+
+.feature {
+    margin-bottom: 40px;
+}
+
+.feature img {
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 20px;
+}
+
+.feature h3 {
+    font-size: 1.8em;
+    margin-bottom: 10px;
+}
+
+.about-section {
+    background: #f4f4f4;
+    padding: 50px 20px;
+    text-align: center;
+}
+
+.about-section h2 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+}
+
+.about-section p {
+    font-size: 1.2em;
+    margin-bottom: 30px;
+}
+
+.team-members {
+    list-style: none;
+    padding: 0;
+}
+
+.team-members li {
+    margin-bottom: 20px;
+}
+
+.team-members h4 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.team-members a {
+    color: #333;
+    text-decoration: none;
+    margin: 0 5px;
+    font-size: 1.2em;
+}
+
+.team-members a:hover {
+    text-decoration: underline;
+}
